@@ -67,9 +67,12 @@ class ViewController: JSQMessagesViewController {
         
         
         //自分のsenderId, senderDisokayNameを設定
-        self.senderId = "user1"
-        self.senderDisplayName = "hoge"
-        
+        if let uid = Auth.auth().currentUser?.uid {
+            self.senderId = "\(uid)"
+        }
+        if let userName = Auth.auth().currentUser?.displayName {
+            self.senderDisplayName = "\(userName)"
+        }
         //吹き出しの設定
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
@@ -94,7 +97,6 @@ class ViewController: JSQMessagesViewController {
         let postData = ["from": senderId, "name": senderDisplayName, "text":text]
         let postsRef = Database.database().reference().child(Const.PostPath)
         postsRef.childByAutoId().setValue(postData)
-        
     }
     
     //アイテムごとに参照するメッセージデータを返す

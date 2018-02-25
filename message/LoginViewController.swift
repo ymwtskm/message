@@ -37,7 +37,7 @@ class LoginViewController: UIViewController {
                     return
                 } else {
                     print("DEBUG_PRINT: ログインに成功しました。")
-                    
+
                     // HUDを消す
                     SVProgressHUD.dismiss()
                     
@@ -92,6 +92,10 @@ class LoginViewController: UIViewController {
                     }
                 } else {
                     print("DEBUG_PRINT: displayNameの設定に失敗しました。")
+                }
+                //メールを送る
+                Auth.auth().currentUser?.sendEmailVerification { (error) in
+                    // ...
                 }
             }
         }
