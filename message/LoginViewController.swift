@@ -93,6 +93,11 @@ class LoginViewController: UIViewController {
                 } else {
                     print("DEBUG_PRINT: displayNameの設定に失敗しました。")
                 }
+                let receiver = Auth.auth().currentUser?.uid
+                let postsRef = Database.database().reference().child(Const2.PostAuth)
+                let postAuth = ["to": receiver]
+                postsRef.childByAutoId().setValue(postAuth)
+
                 //メールを送る
                 Auth.auth().currentUser?.sendEmailVerification { (error) in
                     // ...

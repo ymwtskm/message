@@ -11,4 +11,5 @@ target 'message' do
     pod 'Firebase/Database'
     pod 'SVProgressHUD'
     pod 'JSQMessagesViewController'
+    pod 'Firebase/Storage'
 end
