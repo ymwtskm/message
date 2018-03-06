@@ -23,7 +23,7 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var imageView: UIImageView!
-    var tags = ["<なし>","りこ","レア"]
+    var tags = ["<なし>","tag1","tag2"]
     var tag = ""
     var image = UIImage()
     override func viewDidLoad() {

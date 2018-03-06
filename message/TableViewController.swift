@@ -20,24 +20,37 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var tableView: UITableView!
     
     
+    var members: [String] = []
+    var displayNames: [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        // currentUserがnilならログインしていない
+        if Auth.auth().currentUser == nil {
+            // ログインしていないときの処理
+            let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
+            self.present(loginViewController!, animated: true, completion: nil)
+        }
     }
-    var members: [String] = []
+
     override func viewWillAppear(_ animated: Bool) {
         members = []
+        displayNames = []
         setupFirebase()
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "Segue", sender: nil)
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let viewController: ViewController = segue.destination as! ViewController
         let indexPath = self.tableView.indexPathForSelectedRow
         viewController.receiver = members[indexPath!.row]
     }
+    
     func setupFirebase() {
         let postsRef = Database.database().reference().child(Const2.PostAuth)
         postsRef.observe(.childAdded, with: { snapshot in
@@ -46,9 +59,12 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             if let uid = Auth.auth().currentUser?.uid {
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
                 let receiver = postAuth.receiver
+                let displayName = postAuth.displayName
                 print("追加されました")
                 if uid != receiver {
+                    self.displayNames.append(String(displayName!))
                     self.members.append(String(receiver!))
+
                 }
             }
             self.tableView.reloadData()
@@ -61,11 +77,11 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return members.count
+        return displayNames.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = members[indexPath.row]
+        cell.textLabel?.text = displayNames[indexPath.row]
         return cell
     }
     

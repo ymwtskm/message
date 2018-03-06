@@ -15,6 +15,8 @@ class PostAuth: NSObject {
     var id: String?
     var receiver: String?
     var icon: String?
+    var displayName: String?
+    var userId: String?
     
     init(snapshot: DataSnapshot, myId: String) {
         self.id = snapshot.key
@@ -25,6 +27,9 @@ class PostAuth: NSObject {
         
         self.icon = valueDictionary["image"] as? String
         
+        self.displayName = valueDictionary["displayName"] as? String
+        
+        self.userId = valueDictionary["userId"] as? String
         
     }
 }

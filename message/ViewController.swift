@@ -46,7 +46,6 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
                     if (postReceiver == uid) || (sender == uid) {
                         if let imageString = postData.imageString {
                             let image = UIImage(data: Data(base64Encoded: imageString, options: .ignoreUnknownCharacters)!)
-                            
                             let message = JSQMessage(senderId: sender, displayName: name, media: JSQPhotoMediaItem(image: image))
                             self.messages?.append(message!)
                         }
@@ -71,14 +70,10 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
 
-        
         //テキストフィールドの左のクリップマーク
         //inputToolbar!.contentView!.leftBarButtonItem = nil
         automaticallyScrollsToMostRecentMessage = true
         
-        
-
-
         //吹き出しの設定
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
@@ -87,13 +82,8 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         //アバターの設定
         //self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "Swift-Logo")!, diameter: 64)
         //self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "Swift-Logo")!, diameter: 64)
-        
-
         //メッセージデータの配列を初期化
         self.messages = []
-    }
-    override func viewWillAppear(_ animated: Bool) {
-
         setupFirebase()
         //自分のsenderId, senderDisokayNameを設定
         if let uid = Auth.auth().currentUser?.uid {
@@ -102,7 +92,6 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         if let userName = Auth.auth().currentUser?.displayName {
             self.senderDisplayName = String(userName)
         }
-        print("ID受け渡し\(receiver)")
     }
     
     @objc func dismissKeyboard(){
