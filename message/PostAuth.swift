@@ -26,7 +26,7 @@ class PostAuth: NSObject {
         
         self.receiver = valueDictionary["to"] as? String
         
-        self.icon = valueDictionary["image"] as? String
+        self.icon = valueDictionary["icon"] as? String
         
         self.displayName = valueDictionary["displayName"] as? String
         

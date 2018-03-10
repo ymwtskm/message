@@ -22,6 +22,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var members: [String] = []
     var displayNames: [String] = []
+    var myimage: UIImage?
+    var yourImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,12 +80,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                         self.members.append(String(receiver!))
                     }
                 }
-//                print("追加されました")
-//                if uid != receiver {
-//                    self.displayNames.append(String(displayName!))
-//                    self.members.append(String(receiver!))
-//
-//                }
+
             }
             self.tableView.reloadData()
         })
@@ -102,16 +99,6 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell.textLabel?.text = displayNames[indexPath.row]
         return cell
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

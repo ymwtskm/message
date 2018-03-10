@@ -15,7 +15,7 @@ import FirebaseDatabase
 import FirebaseStorage
 
 class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -55,10 +55,10 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
                             let message = JSQMessage(senderId: sender, displayName: name, text: text)
                             self.messages?.append(message!)
                         }
-
+                        
                     }
                 }
-
+                
                 self.finishReceivingMessage()
             }
         })
@@ -69,7 +69,7 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         // 背景をタップしたらdismissKeyboardメソッドを呼ぶように設定する
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
-
+        
         //テキストフィールドの左のクリップマーク
         //inputToolbar!.contentView!.leftBarButtonItem = nil
         automaticallyScrollsToMostRecentMessage = true
@@ -80,8 +80,8 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleBlue())
         
         //アバターの設定
-        //self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "Swift-Logo")!, diameter: 64)
-        //self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "Swift-Logo")!, diameter: 64)
+        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "dog")!, diameter: 64)
+        self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "dog")!, diameter: 64)
         //メッセージデータの配列を初期化
         self.messages = []
         setupFirebase()
@@ -117,9 +117,9 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         view.endEditing(true)
     }
     
-     // 表示するメッセージの内容
+    // 表示するメッセージの内容
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
-            return messages?[indexPath.row]
+        return messages?[indexPath.row]
     }
     //アイテムごとのMessageBubble(背景)を返す
     override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
@@ -148,15 +148,15 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         if info[UIImagePickerControllerOriginalImage] != nil {
             // 撮影/選択された画像を取得する
             let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        
+            
             //SendImageに変遷
             let sendImageViewController = self.storyboard?.instantiateViewController(withIdentifier: "SendImage") as? SendImageViewController
             sendImageViewController?.image = image
             sendImageViewController?.receiver = receiver
-
+            
             picker.present(sendImageViewController!, animated: true, completion: nil)
-
-
+            
+            
             
         }
     }
@@ -175,8 +175,8 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
             pickerController.sourceType = .photoLibrary
             self.present(pickerController, animated: true, completion: nil)
         }
-    
+        
     }
-
-
+    
+    
 }

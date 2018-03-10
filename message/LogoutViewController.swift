@@ -17,6 +17,7 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
     var postArray:[PostAuth] = []
     
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var iconImage: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -33,10 +34,15 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
         postArray = []
         textField.text = ""
         setupFirebase()
+        
 
     }
-    
+    func iconSet() {
+
+
+    }
     func setupFirebase() {
+        
         let postsRef = Database.database().reference().child(Const2.PostAuth)
         postsRef.observe(.childAdded, with: { snapshot in
             print("DEBUG_PRINT: .childAddedイベントが発生しました。")
@@ -46,6 +52,10 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
                 self.postArray.insert(postAuth, at: 0)
                 if uid == postAuth.receiver {
                     self.textField.text = postAuth.userId
+                    if let imageString = postAuth.icon {
+                        let image = UIImage(data: Data(base64Encoded: imageString, options: .ignoreUnknownCharacters)!)
+                        self.iconImage.image = image
+                    }
                 }
             }
         })
@@ -107,6 +117,42 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
         }
         view.endEditing(true)
     }
+    
+    //アイコン設定ボタンを押したとき
+    @IBAction func iconButton(_ sender: Any) {
+        
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            let pickerController = UIImagePickerController()
+            pickerController.delegate = self
+            pickerController.sourceType = .photoLibrary
+            self.present(pickerController, animated: true, completion: nil)
+        }
+        
+    }
+    
+    //キャンセルを押したとき
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        // 閉じる
+        picker.dismiss(animated: true, completion: nil)
+    }
+    // 写真を撮影/選択したときに呼ばれるメソッド
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if info[UIImagePickerControllerOriginalImage] != nil {
+            // 撮影/選択された画像を取得する
+            let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+            
+            //SendImageに変遷
+            let iconViewController = self.storyboard?.instantiateViewController(withIdentifier: "Icon") as? IconViewController
+            iconViewController?.image = image
+            picker.present(iconViewController!, animated: true, completion: nil)
+            
+            
+            
+        }
+    }
+
+    
+    
     
 
 
