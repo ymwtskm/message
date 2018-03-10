@@ -19,11 +19,23 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBOutlet weak var textField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        // 背景をタップしたらdismissKeyboardメソッドを呼ぶように設定する
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(dismissKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    @objc func dismissKeyboard(){
+        // キーボードを閉じる
+        view.endEditing(true)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
         postArray = []
         textField.text = ""
         setupFirebase()
-        // Do any additional setup after loading the view.
+
     }
+    
     func setupFirebase() {
         let postsRef = Database.database().reference().child(Const2.PostAuth)
         postsRef.observe(.childAdded, with: { snapshot in
@@ -32,9 +44,9 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
             if let uid = Auth.auth().currentUser?.uid {
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
                 self.postArray.insert(postAuth, at: 0)
-                    if let ID = postAuth.userId {
-                        self.textField.text = ID
-                    }
+                if uid == postAuth.receiver {
+                    self.textField.text = postAuth.userId
+                }
             }
         })
     }
@@ -54,10 +66,14 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
         // ログイン画面から戻ってきた時のためにホーム画面（index = 0）を選択している状態にしておく
         //let tabBarController = parent as! ESTabBarController
         //tabBarController.setSelectedIndex(0, animated: false)
+        
+        
     }
     @IBAction func selectButton(_ sender: Any) {
         for postAuth in postArray {
             if postAuth.receiver == Auth.auth().currentUser?.uid {
+                
+                //既に設定している場合
                 if postAuth.userId == textField.text! {
                     view.endEditing(true)
                     return
@@ -77,9 +93,7 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
         }
         if count != postArray.count {
             SVProgressHUD.showError(withStatus: "既に存在するIDです。")
-            textField.text = ""
             return
-
         }
         for postAuth in postArray {
 

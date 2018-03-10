@@ -14,9 +14,9 @@ import JSQMessagesViewController
 import FirebaseDatabase
 import FirebaseStorage
 
-class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var tags:[String] = ["tag1","tag2"]
+    var tags:[String] = ["家族","友達","旅行","食"]
     var tag = ""
     var index = 0
     
@@ -71,15 +71,26 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
         imageViewController.tag = tags[index]
     }
 
+    let margin: CGFloat = 3.0
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        performSegue(withIdentifier: "Segue", sender: nil)
-//    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // if indexPath.row % 3 == 0 {
+        let size = (self.view.frame.width)/4 - (margin * 2)
+        return CGSize(width: size, height: size)
+        // }
+        // return CGSize(width: 60.0, height: 60.0)
+    }
     
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let viewController: ViewController = segue.destination as! ViewController
-//        let indexPath = self.tableView.indexPathForSelectedRow
-//        viewController.receiver = members[indexPath!.row]
-//    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return margin
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return margin
+    }
 
 }

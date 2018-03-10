@@ -17,6 +17,7 @@ class PostAuth: NSObject {
     var icon: String?
     var displayName: String?
     var userId: String?
+    var followers: [String] = []
     
     init(snapshot: DataSnapshot, myId: String) {
         self.id = snapshot.key
@@ -30,6 +31,11 @@ class PostAuth: NSObject {
         self.displayName = valueDictionary["displayName"] as? String
         
         self.userId = valueDictionary["userId"] as? String
+        
+        if let followers = valueDictionary["followers"] as? [String] {
+            self.followers = followers
+        }
+
         
     }
 }

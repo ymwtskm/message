@@ -27,18 +27,26 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+
+
         // currentUserがnilならログインしていない
         if Auth.auth().currentUser == nil {
             // ログインしていないときの処理
             let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
             self.present(loginViewController!, animated: true, completion: nil)
         }
+
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
+
+    }
+    override func viewDidAppear(_ animated: Bool) {
         members = []
         displayNames = []
         setupFirebase()
+
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -46,9 +54,12 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let viewController: ViewController = segue.destination as! ViewController
-        let indexPath = self.tableView.indexPathForSelectedRow
-        viewController.receiver = members[indexPath!.row]
+       //セルを選択した時
+        if segue.identifier == "Segue" {
+            let viewController: ViewController = segue.destination as! ViewController
+            let indexPath = self.tableView.indexPathForSelectedRow
+            viewController.receiver = members[indexPath!.row]
+        }
     }
     
     func setupFirebase() {
@@ -60,12 +71,19 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
                 let receiver = postAuth.receiver
                 let displayName = postAuth.displayName
-                print("追加されました")
-                if uid != receiver {
-                    self.displayNames.append(String(displayName!))
-                    self.members.append(String(receiver!))
-
+                let followers = postAuth.followers
+                for follower in followers {
+                    if follower == uid {
+                        self.displayNames.append(String(displayName!))
+                        self.members.append(String(receiver!))
+                    }
                 }
+//                print("追加されました")
+//                if uid != receiver {
+//                    self.displayNames.append(String(displayName!))
+//                    self.members.append(String(receiver!))
+//
+//                }
             }
             self.tableView.reloadData()
         })

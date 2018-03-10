@@ -15,8 +15,8 @@ import FirebaseDatabase
 import FirebaseStorage
 
 
-class ImageViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-    var tags:[String] = ["tag1","tag2"]
+class ImageViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    var tags:[String] = ["家族","友達","旅行","食"]
     var images: [UIImage] = []
     var tag = ""
     
@@ -25,6 +25,8 @@ class ImageViewController: UIViewController, UICollectionViewDataSource, UIColle
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -42,14 +44,15 @@ class ImageViewController: UIViewController, UICollectionViewDataSource, UIColle
             if let uid = Auth.auth().currentUser?.uid {
                 let postData = PostData(snapshot: snapshot, myId: uid)
                 if postData.tag == self.tag {
-                    let imageString = postData.imageString
-                    let image = UIImage(data: Data(base64Encoded: imageString!, options: .ignoreUnknownCharacters)!)
-                    self.images.insert(image!, at: 0)
-                    self.collectionView.reloadData()
+                    if (postData.receiver == uid) || (postData.sender == uid) {
+                        let imageString = postData.imageString
+                        let image = UIImage(data: Data(base64Encoded: imageString!, options: .ignoreUnknownCharacters)!)
+                        self.images.insert(image!, at: 0)
+                        self.collectionView.reloadData()
                    }
+                }
             }
         })
-    
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,6 +74,27 @@ class ImageViewController: UIViewController, UICollectionViewDataSource, UIColle
         imageView.image = cellImage
 
         return cell
+    }
+    let margin: CGFloat = 3.0
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+       // if indexPath.row % 3 == 0 {
+        let size = (self.view.frame.width)/4 - (margin * 2)
+            return CGSize(width: size, height: size)
+       // }
+       // return CGSize(width: 60.0, height: 60.0)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return margin
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return margin
     }
 
 
