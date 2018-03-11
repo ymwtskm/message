@@ -35,7 +35,7 @@ class IconViewController: UIViewController {
             // PostDataクラスを生成して受け取ったデータを設定する
             if let uid = Auth.auth().currentUser?.uid {
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
-                self.postArray.insert(postAuth, at: 0)
+                self.postArray.insert(postAuth, at: 0)                
             }
         })
     }

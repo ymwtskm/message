@@ -22,6 +22,8 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
     }
     //uidを受け取る
     var receiver: String = ""
+    var friendIcon: UIImage?
+    var myIcon: UIImage?
     
     var messages: [JSQMessage]?
     var incomingBubble: JSQMessagesBubbleImage!
@@ -31,6 +33,28 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
     
     
     func setupFirebase() {
+        let postsAuth = Database.database().reference().child(Const2.PostAuth)
+        postsAuth.observe(.childAdded, with: { snapshot in
+            if let uid = Auth.auth().currentUser?.uid {
+                let postAuth = PostAuth(snapshot: snapshot, myId: uid)
+                if uid == postAuth.receiver {
+                    if postAuth.icon == "icon" {
+                        self.myIcon = UIImage(named: "icon")
+                    }else{
+                        self.myIcon =  UIImage(data: Data(base64Encoded: postAuth.icon!, options: .ignoreUnknownCharacters)!)
+                    }
+                    //自分のアイコンを表示
+                    self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: self.myIcon, diameter: 64)
+
+                }
+            }
+        })
+
+        
+        
+        
+        
+        
         let postsRef = Database.database().reference().child(Const.PostPath)
         postsRef.observe(.childAdded, with: { snapshot in
             print("DEBUG_PRINT: .childAddedイベントが発生しました。")
@@ -46,7 +70,13 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
                     if (postReceiver == uid) || (sender == uid) {
                         if let imageString = postData.imageString {
                             let image = UIImage(data: Data(base64Encoded: imageString, options: .ignoreUnknownCharacters)!)
-                            let message = JSQMessage(senderId: sender, displayName: name, media: JSQPhotoMediaItem(image: image))
+                            let photo = JSQPhotoMediaItem(image: image)
+                            if sender == uid {
+                                photo?.appliesMediaViewMaskAsOutgoing = true
+                            } else {
+                                photo?.appliesMediaViewMaskAsOutgoing = false
+                            }
+                            let message = JSQMessage(senderId: sender, displayName: name, media: photo)
                             self.messages?.append(message!)
                         }
                         
@@ -66,6 +96,9 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        //自分のアイコンを空にする
+        myIcon = nil
+        
         // 背景をタップしたらdismissKeyboardメソッドを呼ぶように設定する
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
@@ -76,15 +109,17 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         
         //吹き出しの設定
         let bubbleFactory = JSQMessagesBubbleImageFactory()
-        self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleLightGray())
+        self.incomingBubble = bubbleFactory?.incomingMessagesBubbleImage(with: UIColor.jsq_messageBubbleGreen())
         self.outgoingBubble = bubbleFactory?.outgoingMessagesBubbleImage(with: UIColor.jsq_messageBubbleBlue())
         
-        //アバターの設定
-        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "dog")!, diameter: 64)
-        self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: UIImage(named: "dog")!, diameter: 64)
+            //アバターの設定
+        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: friendIcon, diameter: 64)
+        
+        
         //メッセージデータの配列を初期化
         self.messages = []
         setupFirebase()
+
         //自分のsenderId, senderDisokayNameを設定
         if let uid = Auth.auth().currentUser?.uid {
             self.senderId = String(uid)

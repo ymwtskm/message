@@ -61,36 +61,38 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                 if postAuth.userId == userId {
                     //自分であればリターン
                     if postAuth.receiver == uid {
+                        SVProgressHUD.showError(withStatus: "自分は追加できません。")
                         return
                     }
-                    print("通過")
+
                     let postsRef = Database.database().reference().child(Const2.PostAuth).child(postAuth.id!)
                     //フォロワーがいない時
                     if postAuth.followers.count == 0 {
                         postAuth.followers.append(uid)
                         let followers = ["followers": postAuth.followers]
                         postsRef.updateChildValues(followers)
-                    }
-                    
-                    //フォロワーがいるとき
-                    for follow in postAuth.followers {
-                        //既に追加しているかどうかを確かめる
-                        if follow != uid {
-                            count += 1
-                        }
-                        print(count)
-                        print(postAuth.followers.count)
-                        // フォロワーに自分がいなければ追加する
-                        if count == postAuth.followers.count {
-                            postAuth.followers.append(uid)
-                            let followers = ["followers": postAuth.followers]
-                            postsRef.updateChildValues(followers)
-                            count = 0
+                    }else{
+                        //フォロワーがいるとき
+                        for follow in postAuth.followers {
+                            //既に追加しているかどうかを確かめる
+                            if follow != uid {
+                                self.count += 1
+                            }
+                            // フォロワーに自分がいなければ追加する
+                            if self.count == postAuth.followers.count {
+                                postAuth.followers.append(uid)
+                                let followers = ["followers": postAuth.followers]
+                                postsRef.updateChildValues(followers)
+                                self.count = 0
+                            }
                         }
                     }
                 }
             }
         }
+        //キーボードを閉じる
+        view.endEditing(true)
+
     }
     
     func setupFirebase() {

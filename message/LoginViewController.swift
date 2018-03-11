@@ -101,7 +101,7 @@ class LoginViewController: UIViewController {
                     }
                     let receiver = Auth.auth().currentUser?.uid
                     let postsRef = Database.database().reference().child(Const2.PostAuth)
-                    let postAuth = ["to": receiver, "displayName": displayName]
+                    let postAuth = ["to": receiver, "displayName": displayName, "icon": "icon"]
                     postsRef.childByAutoId().setValue(postAuth)
 
                     //メールを送る

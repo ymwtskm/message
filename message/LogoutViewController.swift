@@ -53,8 +53,12 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
                 if uid == postAuth.receiver {
                     self.textField.text = postAuth.userId
                     if let imageString = postAuth.icon {
-                        let image = UIImage(data: Data(base64Encoded: imageString, options: .ignoreUnknownCharacters)!)
-                        self.iconImage.image = image
+                        if imageString == "icon" {
+                            self.iconImage.image = UIImage(named: "icon")
+                        }else{
+                            let image = UIImage(data: Data(base64Encoded: imageString, options: .ignoreUnknownCharacters)!)
+                            self.iconImage.image = image
+                        }
                     }
                 }
             }

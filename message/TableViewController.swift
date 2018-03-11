@@ -22,8 +22,9 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var members: [String] = []
     var displayNames: [String] = []
-    var myimage: UIImage?
-    var yourImage: UIImage?
+    //アイコン設定
+    var friendIcon: UIImage?
+    var friendIcons: [UIImage] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,12 +42,11 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-
-    }
     override func viewDidAppear(_ animated: Bool) {
         members = []
         displayNames = []
+        friendIcon = nil
+        friendIcons = []
         setupFirebase()
 
     }
@@ -60,6 +60,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         if segue.identifier == "Segue" {
             let viewController: ViewController = segue.destination as! ViewController
             let indexPath = self.tableView.indexPathForSelectedRow
+            viewController.friendIcon = friendIcons[indexPath!.row]
             viewController.receiver = members[indexPath!.row]
         }
     }
@@ -74,8 +75,16 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 let receiver = postAuth.receiver
                 let displayName = postAuth.displayName
                 let followers = postAuth.followers
+                if let friendIconString = postAuth.icon {
+                    if friendIconString == "icon" {
+                        self.friendIcon = UIImage(named: "icon")
+                    }else{
+                        self.friendIcon = UIImage(data: Data(base64Encoded: friendIconString, options: .ignoreUnknownCharacters)!)
+                    }
+                }
                 for follower in followers {
                     if follower == uid {
+                        self.friendIcons.append(self.friendIcon!)
                         self.displayNames.append(String(displayName!))
                         self.members.append(String(receiver!))
                     }
