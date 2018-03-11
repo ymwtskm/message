@@ -19,18 +19,24 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     @IBOutlet weak var tableView: UITableView!
     
+    //セクションのタイトル
+    let stutus:[String] = ["知り合いかも？","友達"]
     
-    var members: [String] = []
-    var displayNames: [String] = []
+    
+    //知り合い？のreceiver
+    var unknowns: [PostAuth] = []
+    var followers: [String] = []
+    
     //アイコン設定
     var friendIcon: UIImage?
-    var friendIcons: [UIImage] = []
+    
+    var postArray:[PostAuth] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-
+        
 
         // currentUserがnilならログインしていない
         if Auth.auth().currentUser == nil {
@@ -43,25 +49,42 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        members = []
-        displayNames = []
         friendIcon = nil
-        friendIcons = []
+        unknowns = []
+        followers = []
+        postArray = []
         setupFirebase()
-
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "Segue", sender: nil)
+        
+        //友達かどうかで場合わけ
+        if indexPath.section == 0 {
+            return
+        }else{
+            performSegue(withIdentifier: "Segue", sender: nil)
+        }
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
        //セルを選択した時
         if segue.identifier == "Segue" {
             let viewController: ViewController = segue.destination as! ViewController
+            
+            //変更必要
             let indexPath = self.tableView.indexPathForSelectedRow
-            viewController.friendIcon = friendIcons[indexPath!.row]
-            viewController.receiver = members[indexPath!.row]
+            let postAuth = postArray[indexPath!.row]
+            if let friendIconString = postAuth.icon {
+                if friendIconString == "icon" {
+                    self.friendIcon = UIImage(named: "icon")
+                }else{
+                    self.friendIcon = UIImage(data: Data(base64Encoded: friendIconString, options: .ignoreUnknownCharacters)!)
+                }
+            }
+            viewController.friendIcon = friendIcon
+            viewController.receiver = postAuth.receiver!
+            
         }
     }
     
@@ -72,24 +95,29 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             // PostDataクラスを生成して受け取ったデータを設定する
             if let uid = Auth.auth().currentUser?.uid {
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
-                let receiver = postAuth.receiver
-                let displayName = postAuth.displayName
+                //取り出し
                 let followers = postAuth.followers
-                if let friendIconString = postAuth.icon {
-                    if friendIconString == "icon" {
-                        self.friendIcon = UIImage(named: "icon")
-                    }else{
-                        self.friendIcon = UIImage(data: Data(base64Encoded: friendIconString, options: .ignoreUnknownCharacters)!)
-                    }
-                }
+
                 for follower in followers {
                     if follower == uid {
-                        self.friendIcons.append(self.friendIcon!)
-                        self.displayNames.append(String(displayName!))
-                        self.members.append(String(receiver!))
+                        self.postArray.insert(postAuth, at: 0)
                     }
                 }
-
+                let follows = postAuth.follows
+                for follow in follows {
+                    if follow == uid {
+                        var index = 0
+                        for follower in followers {
+                            if follower != uid {
+                                index += 1
+                            }
+                        }
+                        if index == followers.count {
+                            self.unknowns.append(postAuth)
+                        }
+                    }
+                }
+                
             }
             self.tableView.reloadData()
         })
@@ -100,14 +128,40 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.didReceiveMemoryWarning()
         
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayNames.count
+        if section == 0 {
+            return unknowns.count
+        }else if section == 1 {
+            return postArray.count
+        }
+        return 0
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = displayNames[indexPath.row]
+        if indexPath.section == 0 {
+            let unknown = unknowns[indexPath.row]
+            cell.textLabel?.text = unknown.displayName
+        }else if indexPath.section == 1 {
+            let postAuth = postArray[indexPath.row]
+            cell.textLabel?.text = postAuth.displayName
+        }
         return cell
     }
+    
+    //セクションの設定
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return stutus[section]
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return stutus.count
+    }
+    func tableView(_ table: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80.0
+    }
+
 
 
 }
