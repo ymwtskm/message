@@ -24,23 +24,16 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
         // 背景をタップしたらdismissKeyboardメソッドを呼ぶように設定する
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
+        postArray = []
     }
     @objc func dismissKeyboard(){
         // キーボードを閉じる
         view.endEditing(true)
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        postArray = []
-        textField.text = ""
+    override func viewWillAppear(_ animated: Bool) {
         setupFirebase()
-        
-
     }
-    func iconSet() {
-
-
-    }
+    
     func setupFirebase() {
         
         let postsRef = Database.database().reference().child(Const2.PostAuth)
@@ -153,13 +146,7 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
             
             
         }
-    }
-
-    
-    
-    
-
-
+    }   
 
 }
     

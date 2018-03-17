@@ -116,9 +116,6 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(with: friendIcon, diameter: 64)
         
         
-        //メッセージデータの配列を初期化
-        self.messages = []
-        setupFirebase()
 
         //自分のsenderId, senderDisokayNameを設定
         if let uid = Auth.auth().currentUser?.uid {
@@ -127,6 +124,12 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         if let userName = Auth.auth().currentUser?.displayName {
             self.senderDisplayName = String(userName)
         }
+        //メッセージデータの配列を初期化
+        self.messages = []
+
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        setupFirebase()
     }
     
     @objc func dismissKeyboard(){

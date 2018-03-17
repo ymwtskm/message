@@ -16,40 +16,57 @@ import FirebaseStorage
 
 class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var tags:[String] = ["家族","友達","旅行","食"]
+    var tags:[String?] = []
     var tag = ""
     var index = 0
+    
+    @IBOutlet weak var label: UILabel!
     
     @IBOutlet weak var collectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
-//        tags = []
-//        setupFirebase()
+        tags = []
         collectionView.delegate = self
         collectionView.dataSource = self
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        setupFirebase()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    override func viewWillAppear(_ animated: Bool) {
-        
+
+    func setupFirebase() {
+        let postsRef = Database.database().reference().child(Const.PostPath)
+        postsRef.observe(.childAdded, with: { snapshot in
+            print("DEBUG_PRINT: .childAddedイベントが発生しました。")
+            // PostDataクラスを生成して受け取ったデータを設定する
+            if let uid = Auth.auth().currentUser?.uid {
+                let postData = PostData(snapshot: snapshot, myId: uid)
+                if let tag = postData.tag{
+                    for tag1 in self.tags {
+                        if tag == tag1 {
+                            return
+                        }
+                    }
+                    if uid == postData.receiver {
+                        self.tags.insert(tag, at: 0)
+                        self.collectionView.reloadData()
+                    }else if uid == postData.sender {
+                        self.tags.insert(tag, at: 0)
+                        self.collectionView.reloadData()
+                    }
+                }
+                if self.tags.count == 0 {
+                    self.label.isHidden = false
+                }else{
+                    self.label.isHidden = true
+                }
+            }
+        })
     }
-//    func setupFirebase() {
-//        let postsRef = Database.database().reference().child(Const.PostPath)
-//        postsRef.observe(.childAdded, with: { snapshot in
-//            print("DEBUG_PRINT: .childAddedイベントが発生しました。")
-//            // PostDataクラスを生成して受け取ったデータを設定する
-//            if let uid = Auth.auth().currentUser?.uid {
-//                let postData = PostData(snapshot: snapshot, myId: uid)
-//                if let tag = postData.tag{
-//                    self.tags.insert(tag, at: 0)
-//                    self.collectionView.reloadData()
-//                }
-//            }
-//        })
-//
-//    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return tags.count
     }
@@ -68,7 +85,7 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let imageViewController: ImageViewController = segue.destination as! ImageViewController
-        imageViewController.tag = tags[index]
+        imageViewController.tag = tags[index]!
     }
 
     let margin: CGFloat = 3.0

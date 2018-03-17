@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		41B77700B785FB86F3EDEB58 /* Pods_message.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2E1639464E7155759EE67B /* Pods_message.framework */; };
+		B70EED0B205CA5FA00EC38B0 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70EED0A205CA5FA00EC38B0 /* AddViewController.swift */; };
 		B71EF7DB2053DE7800939013 /* IconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EF7DA2053DE7800939013 /* IconViewController.swift */; };
 		B73A0D092046DFEB00A078D1 /* MemberListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B73A0D082046DFEA00A078D1 /* MemberListViewController.swift */; };
 		B73A0D0B2046F4D900A078D1 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B73A0D0A2046F4D900A078D1 /* TableViewController.swift */; };
@@ -18,6 +19,7 @@
 		B784C0B3204A6AE700D08DA1 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B784C0B2204A6AE700D08DA1 /* CollectionViewController.swift */; };
 		B78D988F204270B300E8CE2E /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78D988E204270B300E8CE2E /* Const.swift */; };
 		B78D98912042711400E8CE2E /* PostData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B78D98902042711400E8CE2E /* PostData.swift */; };
+		B7BA77F12056C53400675203 /* TagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7BA77F02056C53400675203 /* TagViewController.swift */; };
 		B7E85FE7204C4C91006EE2E7 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E85FE6204C4C91006EE2E7 /* ImageViewController.swift */; };
 		B7E85FE9204ED3B3006EE2E7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E85FE8204ED3B3006EE2E7 /* SearchViewController.swift */; };
 		B7E8B504204269280046E712 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E8B503204269280046E712 /* AppDelegate.swift */; };
@@ -32,6 +34,7 @@
 /* Begin PBXFileReference section */
 		ABAED14EEED4068A73A12C40 /* Pods-message.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-message.debug.xcconfig"; path = "Pods/Target Support Files/Pods-message/Pods-message.debug.xcconfig"; sourceTree = "<group>"; };
 		AD954E6210FD59EA86961204 /* Pods-message.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-message.release.xcconfig"; path = "Pods/Target Support Files/Pods-message/Pods-message.release.xcconfig"; sourceTree = "<group>"; };
+		B70EED0A205CA5FA00EC38B0 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
 		B71EF7DA2053DE7800939013 /* IconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconViewController.swift; sourceTree = "<group>"; };
 		B73A0D082046DFEA00A078D1 /* MemberListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberListViewController.swift; sourceTree = "<group>"; };
 		B73A0D0A2046F4D900A078D1 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
@@ -42,6 +45,7 @@
 		B784C0B2204A6AE700D08DA1 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		B78D988E204270B300E8CE2E /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		B78D98902042711400E8CE2E /* PostData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostData.swift; sourceTree = "<group>"; };
+		B7BA77F02056C53400675203 /* TagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewController.swift; sourceTree = "<group>"; };
 		B7E85FE6204C4C91006EE2E7 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		B7E85FE8204ED3B3006EE2E7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B7E8B500204269280046E712 /* message.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = message.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +113,7 @@
 				B7E8B503204269280046E712 /* AppDelegate.swift */,
 				B7E8B507204269280046E712 /* Main.storyboard */,
 				B73A0D0A2046F4D900A078D1 /* TableViewController.swift */,
+				B70EED0A205CA5FA00EC38B0 /* AddViewController.swift */,
 				B7E8B505204269280046E712 /* ViewController.swift */,
 				B784C0B0204A49D300D08DA1 /* SendImageViewController.swift */,
 				B784C0B2204A6AE700D08DA1 /* CollectionViewController.swift */,
@@ -118,6 +123,7 @@
 				B74E954120426A4E008A2E08 /* LoginViewController.swift */,
 				B7FB6B0320426DC700BF5EF9 /* LogoutViewController.swift */,
 				B71EF7DA2053DE7800939013 /* IconViewController.swift */,
+				B7BA77F02056C53400675203 /* TagViewController.swift */,
 				B78D98902042711400E8CE2E /* PostData.swift */,
 				B73A0D0E2046F8C700A078D1 /* PostAuth.swift */,
 				B78D988E204270B300E8CE2E /* Const.swift */,
@@ -279,12 +285,14 @@
 				B73A0D092046DFEB00A078D1 /* MemberListViewController.swift in Sources */,
 				B73A0D0B2046F4D900A078D1 /* TableViewController.swift in Sources */,
 				B7E85FE7204C4C91006EE2E7 /* ImageViewController.swift in Sources */,
+				B70EED0B205CA5FA00EC38B0 /* AddViewController.swift in Sources */,
 				B7FB6B0420426DC700BF5EF9 /* LogoutViewController.swift in Sources */,
 				B7E85FE9204ED3B3006EE2E7 /* SearchViewController.swift in Sources */,
 				B78D98912042711400E8CE2E /* PostData.swift in Sources */,
 				B7E8B504204269280046E712 /* AppDelegate.swift in Sources */,
 				B71EF7DB2053DE7800939013 /* IconViewController.swift in Sources */,
 				B73A0D0F2046F8C700A078D1 /* PostAuth.swift in Sources */,
+				B7BA77F12056C53400675203 /* TagViewController.swift in Sources */,
 				B73A0D0D2046F8A400A078D1 /* Const2.swift in Sources */,
 				B78D988F204270B300E8CE2E /* Const.swift in Sources */,
 			);

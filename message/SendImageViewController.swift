@@ -23,7 +23,7 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var imageView: UIImageView!
-    var tags = ["<なし>","家族","友達","旅行","食"]
+    var tags = ["<なし>"]
     var tag = ""
     var image = UIImage()
     override func viewDidLoad() {
@@ -32,6 +32,30 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
         picker.delegate = self
         picker.dataSource = self
         // Do any additional setup after loading the view.
+
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        setupFirebase()
+    }
+    
+    
+    func setupFirebase() {
+        
+        let postsRef = Database.database().reference().child(Const2.PostAuth)
+        postsRef.observe(.childAdded, with: { snapshot in
+            print("DEBUG_PRINT: .childAddedイベントが発生しました。")
+            // PostDataクラスを生成して受け取ったデータを設定する
+            if let uid = Auth.auth().currentUser?.uid {
+                let postAuth = PostAuth(snapshot: snapshot, myId: uid)
+                if uid == postAuth.receiver! {
+                    for tag in postAuth.tags {
+                        self.tags.append(tag)
+                    }
+                    self.picker.reloadAllComponents()
+                }
+            }
+        })
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,14 +97,4 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
