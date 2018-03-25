@@ -22,6 +22,7 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
     }
     //uidを受け取る
     var receiver: String = ""
+    var token: String = ""
     var friendIcon: UIImage?
     var myIcon: UIImage?
     
@@ -71,15 +72,19 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
                         if let imageString = postData.imageString {
                             let image = UIImage(data: Data(base64Encoded: imageString, options: .ignoreUnknownCharacters)!)
                             let photo = JSQPhotoMediaItem(image: image)
+                            
+                            //バブルの設定
                             if sender == uid {
                                 photo?.appliesMediaViewMaskAsOutgoing = true
                             } else {
                                 photo?.appliesMediaViewMaskAsOutgoing = false
                             }
+                            
+                            //画像を送信
                             let message = JSQMessage(senderId: sender, displayName: name, media: photo)
                             self.messages?.append(message!)
                         }
-                        
+                        //文字を送信
                         if let text = postData.text {
                             print("テキストが入力されました")
                             let message = JSQMessage(senderId: sender, displayName: name, text: text)
@@ -126,10 +131,10 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         }
         //メッセージデータの配列を初期化
         self.messages = []
+        setupFirebase()
 
     }
     override func viewWillAppear(_ animated: Bool) {
-        setupFirebase()
     }
     
     @objc func dismissKeyboard(){
@@ -145,14 +150,16 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
         self.finishReceivingMessage(animated: true)
         
         //firebaseにデータを送信、保存する
-        let postData = ["from": senderId, "name": senderDisplayName, "text":text, "to": receiver]
+        let postData = ["from": senderId, "name": senderDisplayName, "text":text, "to": receiver,"token":token]
         let postsRef = Database.database().reference().child(Const.PostPath)
         postsRef.childByAutoId().setValue(postData)
+        
+        
         print("テキストが入力されました")
         //textFieldをクリアにする
         self.finishSendingMessage(animated: true)
-        // キーボードを閉じる
-        view.endEditing(true)
+//        // キーボードを閉じる
+//        view.endEditing(true)
     }
     
     // 表示するメッセージの内容
@@ -191,6 +198,7 @@ class ViewController: JSQMessagesViewController, UIImagePickerControllerDelegate
             let sendImageViewController = self.storyboard?.instantiateViewController(withIdentifier: "SendImage") as? SendImageViewController
             sendImageViewController?.image = image
             sendImageViewController?.receiver = receiver
+            sendImageViewController?.token = token
             
             picker.present(sendImageViewController!, animated: true, completion: nil)
             

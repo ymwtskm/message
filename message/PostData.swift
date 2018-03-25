@@ -25,7 +25,6 @@ class PostData: NSObject {
     init(snapshot: DataSnapshot, myId: String) {
         self.id = snapshot.key
         
-        
         let valueDictionary = snapshot.value as! [String: Any]
         
         self.text = valueDictionary["text"] as? String

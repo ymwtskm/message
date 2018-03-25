@@ -107,7 +107,7 @@ class LogoutViewController: UIViewController, UIImagePickerControllerDelegate, U
             if postAuth.receiver == Auth.auth().currentUser?.uid {
                 postAuth.userId = textField.text!
                 let postRef = Database.database().reference().child(Const2.PostAuth).child(postAuth.id!)
-                let userId = ["userId": postAuth.userId]
+                let userId:[String: Any] = ["userId": postAuth.userId!]
                 postRef.updateChildValues(userId)
                 
             }

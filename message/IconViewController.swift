@@ -54,7 +54,7 @@ class IconViewController: UIViewController {
 
                 postAuth.icon = iconString
                 let postRef = Database.database().reference().child(Const2.PostAuth).child(postAuth.id!)
-                let icon = ["icon": postAuth.icon]
+                let icon:[String: Any] = ["icon": postAuth.icon!]
                 postRef.updateChildValues(icon)
                 UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
                 

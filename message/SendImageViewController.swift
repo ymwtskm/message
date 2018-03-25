@@ -20,10 +20,11 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     
     //uidを受け取る
     var receiver: String = ""
+    var token: String = ""
     
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var imageView: UIImageView!
-    var tags = ["<なし>"]
+    var tags = ["写真"]
     var tag = ""
     var image = UIImage()
     override func viewDidLoad() {
@@ -49,7 +50,7 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
                 if uid == postAuth.receiver! {
                     for tag in postAuth.tags {
-                        self.tags.append(tag)
+                        self.tags.insert(tag, at: 0)
                     }
                     self.picker.reloadAllComponents()
                 }
@@ -88,10 +89,9 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
         //自分のsenderId, senderDisokayNameを設定
         let uid = Auth.auth().currentUser?.uid
         let userName = Auth.auth().currentUser?.displayName
-        
         let imageData = UIImageJPEGRepresentation(image, 0.5)
         let imageString = imageData!.base64EncodedString(options: .lineLength64Characters)
-        let postData = ["from": uid, "name": userName, "media": imageString, "to": self.receiver, "tag": self.tag]
+        let postData = ["from": uid, "name": userName, "media": imageString, "to": self.receiver, "tag": self.tag,"token": token]
         let postsRef = Database.database().reference().child(Const.PostPath)
         postsRef.childByAutoId().setValue(postData)
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)

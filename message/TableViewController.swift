@@ -22,7 +22,6 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     //セクションのタイトル
     let stutus:[String] = ["自分","知り合いかも？","友達"]
     
-    
     //知り合い？のreceiver
     var unknowns: [PostAuth] = []
     var followers: [String] = []
@@ -48,8 +47,11 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
             self.present(loginViewController!, animated: true, completion: nil)
         }
-
-
+        
+        //トークン
+        let token = Messaging.messaging().fcmToken
+        print("FCM tokenトークン: \(token ?? "")")
+        print("ここまで↑")
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -111,6 +113,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     self.friendIcon = UIImage(data: Data(base64Encoded: friendIconString, options: .ignoreUnknownCharacters)!)
                 }
             }
+            viewController.token = postAuth.token!
             viewController.friendIcon = friendIcon
             viewController.receiver = postAuth.receiver!
             
@@ -151,6 +154,19 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                         if index == followers.count {
                             self.unknowns.append(postAuth)
                         }
+                    }
+                }
+                //トークンが変更されていないかどうか、変わっていれば変更
+                if uid == postAuth.receiver {
+                    let token = Messaging.messaging().fcmToken
+                    if postAuth.token == token {
+                        return
+                    }else{
+                        postAuth.token = token
+                        let postRef = Database.database().reference().child(Const2.PostAuth).child(postAuth.id!)
+                        let token:[String: Any] = ["token": postAuth.token!]
+                        postRef.updateChildValues(token)
+
                     }
                 }
                 

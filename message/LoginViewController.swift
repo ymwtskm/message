@@ -100,8 +100,9 @@ class LoginViewController: UIViewController {
                         print("DEBUG_PRINT: displayNameの設定に失敗しました。")
                     }
                     let receiver = Auth.auth().currentUser?.uid
+                    let token = Messaging.messaging().fcmToken
                     let postsRef = Database.database().reference().child(Const2.PostAuth)
-                    let postAuth = ["to": receiver, "displayName": displayName, "icon": "icon"]
+                    let postAuth = ["to": receiver, "displayName": displayName, "icon": "icon","token": token]
                     postsRef.childByAutoId().setValue(postAuth)
 
                     //メールを送る

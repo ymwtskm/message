@@ -16,7 +16,7 @@ import FirebaseStorage
 
 class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var tags:[String?] = []
+    var tags:[String?] = ["写真"]
     var tag = ""
     var index = 0
     
