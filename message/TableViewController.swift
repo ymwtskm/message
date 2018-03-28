@@ -21,6 +21,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     //セクションのタイトル
     let stutus:[String] = ["自分","知り合いかも？","友達"]
+    let stuts2:[String] = ["自分","友達"]
     
     //知り合い？のreceiver
     var unknowns: [PostAuth] = []
@@ -47,33 +48,42 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "Login")
             self.present(loginViewController!, animated: true, completion: nil)
         }
-        
-        //トークン
-        let token = Messaging.messaging().fcmToken
-        print("FCM tokenトークン: \(token ?? "")")
-        print("ここまで↑")
     }
 
     override func viewWillAppear(_ animated: Bool) {
         friendIcon = nil
+        myAuth = []
         unknowns = []
         followers = []
         postArray = []
-        myAuth = []
+    }
+    override func viewDidAppear(_ animated: Bool) {
         setupFirebase()
+
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //友達かどうかで場合わけ
-        if indexPath.section == 0 {
-            return
-        }else if indexPath.section == 1 {
-            performSegue(withIdentifier: "Segue2", sender: nil)
-            print("Segue2")
-        }else if indexPath.section == 2 {
-            performSegue(withIdentifier: "Segue", sender: nil)
-            print("Segue")
+        if unknowns.count == 0 {
+            //友達かどうかで場合わけ
+            if indexPath.section == 0 {
+                return
+            }else if indexPath.section == 1 {
+                performSegue(withIdentifier: "Segue", sender: nil)
+                print("Segue")
+            }
+
+        }else{
+            //友達かどうかで場合わけ
+            if indexPath.section == 0 {
+                return
+            }else if indexPath.section == 1 {
+                performSegue(withIdentifier: "Segue2", sender: nil)
+                print("Segue2")
+            }else if indexPath.section == 2 {
+                performSegue(withIdentifier: "Segue", sender: nil)
+                print("Segue")
+            }
         }
 
     }
@@ -123,14 +133,16 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func setupFirebase() {
         let postsRef = Database.database().reference().child(Const2.PostAuth)
         postsRef.observe(.childAdded, with: { snapshot in
-            print("DEBUG_PRINT: .childAddedイベントが発生しました。")
+
+            print("DEBUG_PRINT: 友達を読み込みました")
+
             // PostDataクラスを生成して受け取ったデータを設定する
             if let uid = Auth.auth().currentUser?.uid {
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
                 
                 //自分の取り出し
                 if uid == postAuth.receiver! {
-                    self.myAuth.append(postAuth)
+                    self.myAuth.insert(postAuth, at: 0)
                 }
                 
                 //友達の取り出し
@@ -182,64 +194,79 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return myAuth.count
-        }else if section == 1 {
-           return unknowns.count
-        }else if section == 2 {
-            return postArray.count
+        //友達かも？がいるかどうかで場合わけ
+        if unknowns.count == 0 {
+            if section == 0 {
+                return myAuth.count
+            }else if section == 1 {
+                return postArray.count
+            }
+        }else{
+            if section == 0 {
+                return myAuth.count
+            }else if section == 1 {
+                return unknowns.count
+            }else if section == 2 {
+                return postArray.count
+            }
+
         }
         return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        if indexPath.section == 0 {
-            let myAccount = myAuth[indexPath.row]
-            cell.textLabel?.text = myAccount.displayName
-//            var myIcon: UIImage?
-//            if myAccount.icon == "icon" {
-//                myIcon = UIImage(named: "icon")
-//            }else{
-//                myIcon =  UIImage(data: Data(base64Encoded: myAccount.icon!, options: .ignoreUnknownCharacters)!)
-//            }
-//            cell.imageView?.image = myIcon
+        //知り合いかも？がいるかどうかで場合わけ
+        if unknowns.count == 0 {
+            if indexPath.section == 0 {
+                let myAccount = myAuth[indexPath.row]
+                cell.textLabel?.text = myAccount.displayName
+                // アクセサリに「none」を指定する場合
+                cell.accessoryType = UITableViewCellAccessoryType.none
+                
+            }else if indexPath.section == 1 {
+                let postAuth = postArray[indexPath.row]
+                cell.textLabel?.text = postAuth.displayName
+            }
+        }else{
+            if indexPath.section == 0 {
+                let myAccount = myAuth[indexPath.row]
+                cell.textLabel?.text = myAccount.displayName
+                
+                // アクセサリに「none」を指定する場合
+                cell.accessoryType = UITableViewCellAccessoryType.none
 
-            // アクセサリに「none」を指定する場合
-            cell.accessoryType = UITableViewCellAccessoryType.none
-            
-        }else if indexPath.section == 1 {
-            let unknown = unknowns[indexPath.row]
-            cell.textLabel?.text = unknown.displayName
-//            var myIcon: UIImage?
-//            if unknown.icon == "icon" {
-//                myIcon = UIImage(named: "icon")
-//            }else{
-//                myIcon =  UIImage(data: Data(base64Encoded: unknown.icon!, options: .ignoreUnknownCharacters)!)
-//            }
-//            cell.imageView?.image = myIcon
-        }else if indexPath.section == 2 {
-            let postAuth = postArray[indexPath.row]
-            cell.textLabel?.text = postAuth.displayName
-//          var myIcon: UIImage?
-//            if postAuth.icon == "icon" {
-//                myIcon = UIImage(named: "icon")
-//            }else{
-//                myIcon =  UIImage(data: Data(base64Encoded: postAuth.icon!, options: .ignoreUnknownCharacters)!)
-//            }
-//            cell.imageView?.image = myIcon
+                
+            }else if indexPath.section == 1 {
+                let unknown = unknowns[indexPath.row]
+                cell.textLabel?.text = unknown.displayName
+                
+            }else if indexPath.section == 2 {
+                let postAuth = postArray[indexPath.row]
+                cell.textLabel?.text = postAuth.displayName
+                
+            }
         }
+
         return cell
     }
     
     //セクションの設定
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return stutus[section]
+        if unknowns.count == 0 {
+            return stuts2[section]
+        }else{
+            return stutus[section]
+        }
     }
     
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return stutus.count
+        if unknowns.count == 0 {
+            return stuts2.count
+        }else{
+            return stutus.count
+        }
     }
     func tableView(_ table: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80.0

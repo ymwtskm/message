@@ -1,8 +1,8 @@
 //
-//  ImageViewController.swift
+//  ScrollViewController.swift
 //  message
 //
-//  Created by 小西椋磨 on 2018/03/05.
+//  Created by 小西椋磨 on 2018/03/27.
 //  Copyright © 2018年 ryoma.konishi. All rights reserved.
 //
 
@@ -14,35 +14,48 @@ import JSQMessagesViewController
 import FirebaseDatabase
 import FirebaseStorage
 
-
-class ImageViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ScrollViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout  {
     var tags:[String] = []
     var images: [UIImage] = []
     var tag = ""
     var index = 0
-
     
+    @IBAction func backButton(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
     @IBOutlet weak var collectionView: UICollectionView!
+    
+    // ステータスバーを消す --- ここから ---
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return true
+        }
+    } // --- ここまで追加 ---
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
-        
-        
-        
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         images = []
         setupFirebase()
         collectionView.reloadData()
         print(tag)
     }
+    override func viewDidAppear(_ animated: Bool) {
+        let indexPath = IndexPath(item: index, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+
+    }
     
     func setupFirebase() {
         let postsRef = Database.database().reference().child(Const.PostPath)
         postsRef.observe(.childAdded, with: { snapshot in
             print("DEBUG_PRINT: .childAddedイベントが発生しました。")
-                // PostDataクラスを生成して受け取ったデータを設定する
+            // PostDataクラスを生成して受け取ったデータを設定する
             if let uid = Auth.auth().currentUser?.uid {
                 let postData = PostData(snapshot: snapshot, myId: uid)
                 if postData.tag == self.tag {
@@ -51,12 +64,12 @@ class ImageViewController: UIViewController, UICollectionViewDataSource, UIColle
                         let image = UIImage(data: Data(base64Encoded: imageString!, options: .ignoreUnknownCharacters)!)
                         self.images.insert(image!, at: 0)
                         self.collectionView.reloadData()
-                   }
+                    }
                 }
             }
         })
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -74,45 +87,34 @@ class ImageViewController: UIViewController, UICollectionViewDataSource, UIColle
         let cellImage = images[indexPath.row]
         // UIImageをUIImageViewのimageとして設定
         imageView.image = cellImage
-
+        
         return cell
     }
     
-    //余白
-    let margin: CGFloat = 2.0
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = (self.view.frame.width - margin * 3)/4
-        return CGSize(width: size, height: size)
+        let width = self.view.frame.width
+        let height = self.view.frame.height
+        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        if section % 3 == 0 {
+
             return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        }else if section % 4 == 1 {
-            return UIEdgeInsets(top: 0, left: margin, bottom: margin, right: margin/2)
-        }else{
-            return UIEdgeInsets(top: 0, left: margin/2, bottom: margin, right: margin)
-        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return margin
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return margin
+        return 0
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.index = indexPath.row
-        
-        //画面変遷の処理
-        let scrollViewController = self.storyboard?.instantiateViewController(withIdentifier: "Scroll")
-            as? ScrollViewController
-        scrollViewController?.tag = self.tag
-        scrollViewController?.index = self.index
-        self.present(scrollViewController!, animated: true, completion: nil)
+        print("タップしました")
     }
-
+    
+    
 
 }

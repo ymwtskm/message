@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		41B77700B785FB86F3EDEB58 /* Pods_message.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD2E1639464E7155759EE67B /* Pods_message.framework */; };
 		B70EED0B205CA5FA00EC38B0 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70EED0A205CA5FA00EC38B0 /* AddViewController.swift */; };
+		B7111AD3206952D7002EC80B /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7111AD2206952D6002EC80B /* ScrollViewController.swift */; };
 		B71EF7DB2053DE7800939013 /* IconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B71EF7DA2053DE7800939013 /* IconViewController.swift */; };
 		B73A0D092046DFEB00A078D1 /* MemberListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B73A0D082046DFEA00A078D1 /* MemberListViewController.swift */; };
 		B73A0D0B2046F4D900A078D1 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B73A0D0A2046F4D900A078D1 /* TableViewController.swift */; };
@@ -35,6 +36,7 @@
 		ABAED14EEED4068A73A12C40 /* Pods-message.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-message.debug.xcconfig"; path = "Pods/Target Support Files/Pods-message/Pods-message.debug.xcconfig"; sourceTree = "<group>"; };
 		AD954E6210FD59EA86961204 /* Pods-message.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-message.release.xcconfig"; path = "Pods/Target Support Files/Pods-message/Pods-message.release.xcconfig"; sourceTree = "<group>"; };
 		B70EED0A205CA5FA00EC38B0 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
+		B7111AD2206952D6002EC80B /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
 		B71875302062B44F005247AD /* message.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = message.entitlements; sourceTree = "<group>"; };
 		B71EF7DA2053DE7800939013 /* IconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconViewController.swift; sourceTree = "<group>"; };
 		B73A0D082046DFEA00A078D1 /* MemberListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberListViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				B784C0B0204A49D300D08DA1 /* SendImageViewController.swift */,
 				B784C0B2204A6AE700D08DA1 /* CollectionViewController.swift */,
 				B7E85FE6204C4C91006EE2E7 /* ImageViewController.swift */,
+				B7111AD2206952D6002EC80B /* ScrollViewController.swift */,
 				B73A0D082046DFEA00A078D1 /* MemberListViewController.swift */,
 				B7E85FE8204ED3B3006EE2E7 /* SearchViewController.swift */,
 				B74E954120426A4E008A2E08 /* LoginViewController.swift */,
@@ -303,6 +306,7 @@
 				B78D98912042711400E8CE2E /* PostData.swift in Sources */,
 				B7E8B504204269280046E712 /* AppDelegate.swift in Sources */,
 				B71EF7DB2053DE7800939013 /* IconViewController.swift in Sources */,
+				B7111AD3206952D7002EC80B /* ScrollViewController.swift in Sources */,
 				B73A0D0F2046F8C700A078D1 /* PostAuth.swift in Sources */,
 				B7BA77F12056C53400675203 /* TagViewController.swift in Sources */,
 				B73A0D0D2046F8A400A078D1 /* Const2.swift in Sources */,

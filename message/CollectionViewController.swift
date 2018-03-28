@@ -16,7 +16,7 @@ import FirebaseStorage
 
 class CollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var tags:[String?] = ["写真"]
+    var tags:[String?] = []
     var tag = ""
     var index = 0
     
@@ -50,7 +50,11 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
                             return
                         }
                     }
-                    if uid == postData.receiver {
+                    //タグが空白または＜なし＞の場合はリターン
+                    if (tag == "") || (tag == "<なし>") {
+                        return
+                    //タグが上記以外の場合タグ配列に入れる
+                    }else if uid == postData.receiver {
                         self.tags.insert(tag, at: 0)
                         self.collectionView.reloadData()
                     }else if uid == postData.sender {
@@ -91,11 +95,9 @@ class CollectionViewController: UIViewController, UICollectionViewDelegate, UICo
     let margin: CGFloat = 3.0
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // if indexPath.row % 3 == 0 {
+        //1つの列で4つのアイテム
         let size = (self.view.frame.width)/4 - (margin * 2)
         return CGSize(width: size, height: size)
-        // }
-        // return CGSize(width: 60.0, height: 60.0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

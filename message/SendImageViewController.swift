@@ -24,7 +24,7 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
     
     @IBOutlet weak var picker: UIPickerView!
     @IBOutlet weak var imageView: UIImageView!
-    var tags = ["写真"]
+    var tags = ["<なし>"]
     var tag = ""
     var image = UIImage()
     override func viewDidLoad() {
@@ -50,8 +50,7 @@ class SendImageViewController: UIViewController, UIPickerViewDelegate, UIPickerV
                 let postAuth = PostAuth(snapshot: snapshot, myId: uid)
                 if uid == postAuth.receiver! {
                     for tag in postAuth.tags {
-                        self.tags.insert(tag, at: 0)
-                    }
+                        self.tags.append(tag)                    }
                     self.picker.reloadAllComponents()
                 }
             }
